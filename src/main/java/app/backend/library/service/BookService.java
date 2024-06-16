@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class BookService {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
@@ -27,28 +28,25 @@ public class BookService {
         this.authorService = authorService;
     }
 
-    @Transactional(readOnly = true)
     public List<BookDTO> getAllBooks() {
         List<Book> books = bookRepository.findAll();
         return books.stream()
                 .map(this::convertToDto)
                 .toList();
     }
-    @Transactional(readOnly = true)
+
     public BookDTO getBookById(Long id) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(BOOK_NOT_FOUND_MESSAGE));
         return convertToDto(book);
     }
 
-    @Transactional
     public BookDTO createBook(BookDTO bookDto) {
         Book book = convertToEntity(bookDto);
         Book savedBook = bookRepository.save(book);
         return convertToDto(savedBook);
     }
 
-    @Transactional
     public BookDTO updateBook(Long id, BookDTO bookDto) {
         Book existingBook = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(BOOK_NOT_FOUND_MESSAGE));
@@ -76,8 +74,6 @@ public class BookService {
         return convertToDto(updatedBook);
     }
 
-
-    @Transactional
     public void deleteBook(Long id) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(BOOK_NOT_FOUND_MESSAGE));

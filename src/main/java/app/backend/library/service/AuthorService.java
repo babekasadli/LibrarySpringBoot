@@ -4,6 +4,7 @@ import app.backend.library.dto.AuthorDTO;
 import app.backend.library.entity.Author;
 import app.backend.library.exceptions.ResourceNotFoundException;
 import app.backend.library.repository.AuthorRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class AuthorService {
     private final AuthorRepository authorRepository;
     private static final String AUTHOR_NOT_FOUND = "Author not found";

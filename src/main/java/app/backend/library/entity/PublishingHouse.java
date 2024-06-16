@@ -1,12 +1,20 @@
 package app.backend.library.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.util.List;
 
-@Data
 @Entity
+@Table(name = "publishing_houses")
+@Getter
+@Setter
+@ToString(exclude = "books")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class PublishingHouse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +24,5 @@ public class PublishingHouse {
     private String contactNumber;
 
     @OneToMany(mappedBy = "publishingHouse", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     private List<Book> books;
 }

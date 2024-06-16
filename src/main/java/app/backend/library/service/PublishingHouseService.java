@@ -6,10 +6,12 @@ import app.backend.library.exceptions.ResourceNotFoundException;
 import app.backend.library.repository.PublishingHouseRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class PublishingHouseService {
     private final PublishingHouseRepository publishingHouseRepository;
     private static final String PH_NOT_FOUND = "Publishing house not found";
@@ -45,10 +47,11 @@ public class PublishingHouseService {
         return convertToDto(updatedPublishingHouse);
     }
 
-    public void deletePublishingHouse(Long id) {
+    public boolean deletePublishingHouse(Long id) {
         PublishingHouse publishingHouse = publishingHouseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(PH_NOT_FOUND));
         publishingHouseRepository.delete(publishingHouse);
+        return true;
     }
 
     private PublishingHouseDTO convertToDto(PublishingHouse publishingHouse) {

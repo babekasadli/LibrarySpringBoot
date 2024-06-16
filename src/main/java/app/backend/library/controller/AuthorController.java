@@ -5,6 +5,7 @@ import app.backend.library.service.AuthorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/authors")
 @Validated
+@Tag(name = "Authors", description = "APIs related to managing authors")
 public class AuthorController {
     private final AuthorService authorService;
 
@@ -23,6 +25,7 @@ public class AuthorController {
         this.authorService = authorService;
     }
 
+    @Operation(summary = "Get all authors", description = "Get a list of all authors")
     @GetMapping
     public List<AuthorDTO> getAllAuthors() {
         return authorService.getAllAuthors();
@@ -51,12 +54,22 @@ public class AuthorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdAuthor);
     }
 
+    @Operation(summary = "Update an existing author", description = "Update author details by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully updated author"),
+            @ApiResponse(responseCode = "404", description = "Author not found")
+    })
     @PutMapping("/{id}")
     public ResponseEntity<AuthorDTO> updateAuthor(@PathVariable Long id, @RequestBody AuthorDTO authorDto) {
         AuthorDTO updatedAuthor = authorService.updateAuthor(id, authorDto);
         return ResponseEntity.ok(updatedAuthor);
     }
 
+    @Operation(summary = "Delete an author", description = "Delete an author by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Author deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Author not found")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAuthor(@PathVariable Long id) {
         authorService.deleteAuthor(id);

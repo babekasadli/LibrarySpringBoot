@@ -1,14 +1,16 @@
 package app.backend.library.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Set;
 
-@Data
 @Entity
 @Table(name = "users")
-public class User {
+@Getter
+@Setter
+public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: Library
+  datasource:
+    url: jdbc:postgresql://localhost:5432/libraryDB
+    username: postgres
+    password: lfsmodslife
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+
+server:
+  port: 8080
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    disable-swagger-default-url: true

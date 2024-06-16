@@ -1,12 +1,19 @@
 package app.backend.library.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+
 import java.util.List;
 
-@Data
 @Entity
+@Table(name = "authors")
+@Getter
+@Setter
+@ToString(exclude = "books")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+
 public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +23,5 @@ public class Author {
     private String nationality;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     private List<Book> books;
 }
