@@ -8,6 +8,10 @@
 - Login for ADMIN: `admin`
 - Password for ADMIN: `admin123`
 
+## UML Diagram:
+
+Click to [Link](https://drive.google.com/file/d/1iWWqQht-YD3Jr41qEvuqErBGH6Ijrrok/view?usp=drive_link) to open in Google Drive.
+
 ## API endpoints:
 
 - GET `/api/books` - get all books
