@@ -1,7 +1,6 @@
 package app.backend.library.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,8 +10,8 @@ import java.util.List;
 @Table(name = "authors")
 @Getter
 @Setter
+@NoArgsConstructor
 @ToString(exclude = "books")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 
 public class Author {
     @Id
@@ -23,5 +22,6 @@ public class Author {
     private String nationality;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private List<Book> books;
 }

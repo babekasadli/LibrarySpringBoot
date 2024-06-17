@@ -1,9 +1,9 @@
 package app.backend.library.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -13,8 +13,8 @@ import java.time.LocalDate;
 @Table(name = "books")
 @Getter
 @Setter
+@NoArgsConstructor
 @ToString
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +27,7 @@ public class Book {
 
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
+    @JsonManagedReference
     private Author author;
 
     @ManyToOne(fetch = FetchType.LAZY)

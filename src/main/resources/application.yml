@@ -19,3 +19,8 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     disable-swagger-default-url: true
+
+demo:
+  admin-password: admin123
+  user-password: user123
+

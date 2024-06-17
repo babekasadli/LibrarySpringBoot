@@ -8,7 +8,9 @@ import app.backend.library.repository.AuthorRepository;
 import app.backend.library.repository.BookRepository;
 import app.backend.library.repository.PublishingHouseRepository;
 import app.backend.library.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,7 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Component
+@EnableConfigurationProperties(DemoDataProperties.class)
 public class DemoDataLoader implements CommandLineRunner {
 
     private final AuthorRepository authorRepository;
@@ -24,20 +27,23 @@ public class DemoDataLoader implements CommandLineRunner {
     private final PublishingHouseRepository publishingHouseRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final DemoDataProperties demoDataProperties;
 
+    @Autowired
     public DemoDataLoader(AuthorRepository authorRepository, BookRepository bookRepository,
                           PublishingHouseRepository publishingHouseRepository, UserRepository userRepository,
-                          PasswordEncoder passwordEncoder) {
+                          PasswordEncoder passwordEncoder, DemoDataProperties demoDataProperties) {
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
         this.publishingHouseRepository = publishingHouseRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.demoDataProperties = demoDataProperties;
     }
 
     @Transactional
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         if (authorRepository.count() == 0 && bookRepository.count() == 0 && publishingHouseRepository.count() == 0) {
             loadDemoData();
         }
@@ -148,13 +154,13 @@ public class DemoDataLoader implements CommandLineRunner {
 
         User user1 = new User();
         user1.setUsername("admin");
-        user1.setPassword(passwordEncoder.encode("admin123"));
+        user1.setPassword(passwordEncoder.encode(demoDataProperties.getAdminPassword()));
         user1.setRoles(Set.of("ROLE_ADMIN"));
         userRepository.save(user1);
 
         User user2 = new User();
         user2.setUsername("user");
-        user2.setPassword(passwordEncoder.encode("user123"));
+        user2.setPassword(passwordEncoder.encode(demoDataProperties.getAdminPassword()));
         user2.setRoles(Set.of("ROLE_USER"));
         userRepository.save(user2);
     }

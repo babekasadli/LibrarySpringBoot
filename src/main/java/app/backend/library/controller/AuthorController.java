@@ -1,12 +1,14 @@
 package app.backend.library.controller;
 
 import app.backend.library.dto.AuthorDTO;
+import app.backend.library.exceptions.ResourceNotFoundException;
 import app.backend.library.service.AuthorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,8 +21,10 @@ import java.util.List;
 @Validated
 @Tag(name = "Authors", description = "APIs related to managing authors")
 public class AuthorController {
+
     private final AuthorService authorService;
 
+    @Autowired
     public AuthorController(AuthorService authorService) {
         this.authorService = authorService;
     }
@@ -57,10 +61,11 @@ public class AuthorController {
     @Operation(summary = "Update an existing author", description = "Update author details by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully updated author"),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
             @ApiResponse(responseCode = "404", description = "Author not found")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<AuthorDTO> updateAuthor(@PathVariable Long id, @RequestBody AuthorDTO authorDto) {
+    public ResponseEntity<AuthorDTO> updateAuthor(@PathVariable Long id, @Valid @RequestBody AuthorDTO authorDto) {
         AuthorDTO updatedAuthor = authorService.updateAuthor(id, authorDto);
         return ResponseEntity.ok(updatedAuthor);
     }
@@ -74,5 +79,10 @@ public class AuthorController {
     public ResponseEntity<Void> deleteAuthor(@PathVariable Long id) {
         authorService.deleteAuthor(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 }

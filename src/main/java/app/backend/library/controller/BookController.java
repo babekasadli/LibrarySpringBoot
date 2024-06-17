@@ -1,12 +1,14 @@
 package app.backend.library.controller;
 
 import app.backend.library.dto.BookDTO;
+import app.backend.library.exceptions.ResourceNotFoundException;
 import app.backend.library.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,17 +21,15 @@ import java.util.List;
 @Validated
 @Tag(name = "Books", description = "APIs related to managing books")
 public class BookController {
+
     private final BookService bookService;
 
+    @Autowired
     public BookController(BookService bookService) {
         this.bookService = bookService;
     }
 
-    @Operation(summary = "Get all books", description = "Retrieve all books in the library")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved books"),
-            @ApiResponse(responseCode = "404", description = "No books found")
-    })
+    @Operation(summary = "Get all books", description = "Get a list of all books")
     @GetMapping
     public List<BookDTO> getAllBooks() {
         return bookService.getAllBooks();
@@ -58,19 +58,19 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdBook);
     }
 
-    @Operation(summary = "Update an existing book", description = "Update details of an existing book")
+    @Operation(summary = "Update an existing book", description = "Update book details by ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Book updated successfully"),
+            @ApiResponse(responseCode = "200", description = "Successfully updated book"),
             @ApiResponse(responseCode = "400", description = "Invalid input"),
             @ApiResponse(responseCode = "404", description = "Book not found")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<BookDTO> updateBook(@PathVariable Long id, @RequestBody BookDTO bookDto) {
+    public ResponseEntity<BookDTO> updateBook(@PathVariable Long id, @Valid @RequestBody BookDTO bookDto) {
         BookDTO updatedBook = bookService.updateBook(id, bookDto);
         return ResponseEntity.ok(updatedBook);
     }
 
-    @Operation(summary = "Delete a book", description = "Remove a book from the library")
+    @Operation(summary = "Delete a book", description = "Delete a book by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Book deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Book not found")
@@ -79,5 +79,10 @@ public class BookController {
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 }

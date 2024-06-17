@@ -1,9 +1,9 @@
 package app.backend.library.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -13,8 +13,8 @@ import java.util.List;
 @Table(name = "publishing_houses")
 @Getter
 @Setter
+@NoArgsConstructor
 @ToString(exclude = "books")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class PublishingHouse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,5 +24,6 @@ public class PublishingHouse {
     private String contactNumber;
 
     @OneToMany(mappedBy = "publishingHouse", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private List<Book> books;
 }

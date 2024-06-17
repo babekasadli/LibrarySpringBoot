@@ -24,9 +24,9 @@
 - DELETE `/api/authors/{id}` - delete author by id
 
 
-- GET `/api/publishingHouses` - get all publishing houses
-- GET `/api/publishingHouses/{id}` - get publishing house by id
-- POST `/api/publishingHouses` - add new publishing house
-- PUT `/api/publishingHouses/{id}` - update publishing house by id
-- DELETE `/api/publishingHouses/{id}` - delete publishing house by id
+- GET `/api/publishing-houses` - get all publishing houses
+- GET `/api/publishing-houses/{id}` - get publishing house by id
+- POST `/api/publishing-houses` - add new publishing house
+- PUT `/api/publishing-houses/{id}` - update publishing house by id
+- DELETE `/api/publishing-houses/{id}` - delete publishing house by id
 

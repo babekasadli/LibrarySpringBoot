@@ -5,6 +5,7 @@ import app.backend.library.entity.PublishingHouse;
 import app.backend.library.exceptions.ResourceNotFoundException;
 import app.backend.library.repository.PublishingHouseRepository;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ public class PublishingHouseService {
     private final PublishingHouseRepository publishingHouseRepository;
     private static final String PH_NOT_FOUND = "Publishing house not found";
 
+    @Autowired
     public PublishingHouseService(PublishingHouseRepository publishingHouseRepository) {
         this.publishingHouseRepository = publishingHouseRepository;
     }
@@ -47,11 +49,10 @@ public class PublishingHouseService {
         return convertToDto(updatedPublishingHouse);
     }
 
-    public boolean deletePublishingHouse(Long id) {
+    public void deletePublishingHouse(Long id) {
         PublishingHouse publishingHouse = publishingHouseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(PH_NOT_FOUND));
         publishingHouseRepository.delete(publishingHouse);
-        return true;
     }
 
     private PublishingHouseDTO convertToDto(PublishingHouse publishingHouse) {

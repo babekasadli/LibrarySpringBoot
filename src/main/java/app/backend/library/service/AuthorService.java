@@ -6,6 +6,7 @@ import app.backend.library.exceptions.ResourceNotFoundException;
 import app.backend.library.repository.AuthorRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class AuthorService {
     private final AuthorRepository authorRepository;
     private static final String AUTHOR_NOT_FOUND = "Author not found";
 
+    @Autowired
     public AuthorService(AuthorRepository authorRepository) {
         this.authorRepository = authorRepository;
     }
